@@ -1,0 +1,49 @@
+{
+  "name": "@birdactyl/plugin-ui",
+  "version": "1.0.0",
+  "description": "SDK for building Birdactyl plugin UIs",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  },
+  "keywords": [
+    "birdactyl",
+    "plugin",
+    "ui",
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Birdactyl/Birdactyl-UI-SDK"
+  },
+  "author": "Birdactyl",
+  "homepage": "https://github.com/Birdactyl/Birdactyl-UI-SDK",
+  "license": "MIT"
+}
