@@ -21,14 +21,13 @@ export function birdactylPlugin(options: BirdactylPluginOptions): Plugin {
               'react-dom',
               'react-router-dom',
               'react/jsx-runtime',
-              '@birdactyl/plugin-ui',
             ],
             output: {
               globals: {
                 'react': 'window.BIRDACTYL.React',
                 'react-dom': 'window.BIRDACTYL.ReactDOM',
                 'react-router-dom': 'window.BIRDACTYL.ReactRouterDOM',
-                'react/jsx-runtime': 'window.BIRDACTYL.React',
+                'react/jsx-runtime': 'window.BIRDACTYL_JSX',
               },
             },
           },
@@ -58,14 +57,13 @@ export function createViteConfig(options: BirdactylPluginOptions): UserConfig {
           'react-dom',
           'react-router-dom',
           'react/jsx-runtime',
-          '@birdactyl/plugin-ui',
         ],
         output: {
           globals: {
             'react': 'window.BIRDACTYL.React',
             'react-dom': 'window.BIRDACTYL.ReactDOM',
             'react-router-dom': 'window.BIRDACTYL.ReactRouterDOM',
-            'react/jsx-runtime': 'window.BIRDACTYL.React',
+            'react/jsx-runtime': 'window.BIRDACTYL_JSX',
           },
         },
       },

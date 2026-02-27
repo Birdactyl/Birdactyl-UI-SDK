@@ -63,7 +63,7 @@ export function useEvent<K extends EventName>(event: K, callback: EventCallback<
   const useRef = window.BIRDACTYL_SDK.useRef;
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
-  
+
   useEffect(() => {
     const handler = (data: EventMap[K]) => callbackRef.current(data);
     return window.BIRDACTYL_SDK.events.on(event, handler);
@@ -117,6 +117,16 @@ export interface ModalProps {
   className?: string;
 }
 
+export interface SlidePanelProps {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  description?: string;
+  children: ReactNode;
+  footer?: ReactNode;
+  width?: string;
+}
+
 export interface Column<T> {
   key: string;
   header: ReactNode;
@@ -166,32 +176,41 @@ export interface BulkActionBarProps {
   onClear: () => void;
 }
 
-export interface DropdownMenuProps {
+export interface FloatingBarProps {
+  show: boolean;
   children: ReactNode;
+}
+
+export interface StatusDotProps {
+  status: string;
   className?: string;
 }
 
-export interface DropdownMenuTriggerProps {
-  children: ReactNode;
-  asChild?: boolean;
-  className?: string;
-}
-
-export interface DropdownMenuContentProps {
-  children: ReactNode;
-  align?: 'start' | 'center' | 'end';
-  side?: 'top' | 'bottom';
-  sideOffset?: number;
-  className?: string;
-}
-
-export interface DropdownMenuItemProps {
-  children: ReactNode;
+export interface ContextMenuItem {
+  label: ReactNode;
+  icon?: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'danger';
   disabled?: boolean;
-  destructive?: boolean;
-  onSelect?: () => void;
-  shortcut?: string;
+}
+
+export type ContextMenuItems = (ContextMenuItem | 'separator')[];
+
+export interface ContextMenuProps {
+  trigger: ReactNode;
+  items: ContextMenuItems;
+  align?: 'start' | 'end';
   className?: string;
+  rightClick?: boolean;
+  rightClickOnly?: boolean;
+}
+
+export interface ContextMenuZoneProps {
+  children: ReactNode;
+  items: ContextMenuItems;
+  className?: string;
+  as?: React.ElementType;
+  [key: string]: unknown;
 }
 
 export const Button: ComponentType<ButtonProps> = (props) => {
@@ -216,6 +235,11 @@ export const Input: ComponentType<InputProps> = (props) => {
 
 export const Modal: ComponentType<ModalProps> = (props) => {
   const Comp = window.BIRDACTYL.UI.Modal;
+  return window.BIRDACTYL.React.createElement(Comp, props);
+};
+
+export const SlidePanel: ComponentType<SlidePanelProps> = (props) => {
+  const Comp = window.BIRDACTYL.UI.SlidePanel;
   return window.BIRDACTYL.React.createElement(Comp, props);
 };
 
@@ -244,55 +268,31 @@ export const BulkActionBar: ComponentType<BulkActionBarProps> = (props) => {
   return window.BIRDACTYL.React.createElement(Comp, props);
 };
 
-export const DropdownMenu: ComponentType<DropdownMenuProps> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenu;
+export const FloatingBar: ComponentType<FloatingBarProps> = (props) => {
+  const Comp = window.BIRDACTYL.UI.FloatingBar;
   return window.BIRDACTYL.React.createElement(Comp, props);
 };
 
-export const DropdownMenuTrigger: ComponentType<DropdownMenuTriggerProps> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuTrigger;
+export const StatusDot: ComponentType<StatusDotProps> = (props) => {
+  const Comp = window.BIRDACTYL.UI.StatusDot;
   return window.BIRDACTYL.React.createElement(Comp, props);
 };
 
-export const DropdownMenuContent: ComponentType<DropdownMenuContentProps> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuContent;
+export const ContextMenu: ComponentType<ContextMenuProps> = (props) => {
+  const Comp = window.BIRDACTYL.UI.ContextMenu;
   return window.BIRDACTYL.React.createElement(Comp, props);
 };
 
-export const DropdownMenuItem: ComponentType<DropdownMenuItemProps> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuItem;
+export const ContextMenuZone: ComponentType<ContextMenuZoneProps> = (props) => {
+  const Comp = window.BIRDACTYL.UI.ContextMenuZone;
   return window.BIRDACTYL.React.createElement(Comp, props);
 };
 
-export const DropdownMenuLabel: ComponentType<{ children: ReactNode; className?: string }> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuLabel;
-  return window.BIRDACTYL.React.createElement(Comp, props);
-};
-
-export const DropdownMenuSeparator: ComponentType<{}> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuSeparator;
-  return window.BIRDACTYL.React.createElement(Comp, props);
-};
-
-export const DropdownMenuGroup: ComponentType<{ children: ReactNode }> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuGroup;
-  return window.BIRDACTYL.React.createElement(Comp, props);
-};
-
-export const DropdownMenuSub: ComponentType<{ children: ReactNode }> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuSub;
-  return window.BIRDACTYL.React.createElement(Comp, props);
-};
-
-export const DropdownMenuSubTrigger: ComponentType<{ children: ReactNode }> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuSubTrigger;
-  return window.BIRDACTYL.React.createElement(Comp, props);
-};
-
-export const DropdownMenuSubContent: ComponentType<{ children: ReactNode }> = (props) => {
-  const Comp = window.BIRDACTYL.UI.DropdownMenuSubContent;
-  return window.BIRDACTYL.React.createElement(Comp, props);
-};
+/** Hook that returns data attributes to spread onto an element for right-click context menu support. */
+export function useContextMenuZone(items: ContextMenuItems): Record<string, string> {
+  const hook = window.BIRDACTYL.UI.useContextMenuZone;
+  return hook(items);
+}
 
 export const Icons = new Proxy({} as Record<string, ComponentType<{ className?: string }>>, {
   get: (_, name: string) => {
@@ -316,21 +316,16 @@ declare global {
         StatCard: ComponentType<StatCardProps>;
         Input: ComponentType<InputProps>;
         Modal: ComponentType<ModalProps>;
+        SlidePanel: ComponentType<SlidePanelProps>;
         Table: ComponentType<TableProps<any>>;
         Checkbox: ComponentType<CheckboxProps>;
         DatePicker: ComponentType<DatePickerProps>;
         Pagination: ComponentType<PaginationProps>;
         BulkActionBar: ComponentType<BulkActionBarProps>;
-        DropdownMenu: ComponentType<DropdownMenuProps>;
-        DropdownMenuTrigger: ComponentType<DropdownMenuTriggerProps>;
-        DropdownMenuContent: ComponentType<DropdownMenuContentProps>;
-        DropdownMenuItem: ComponentType<DropdownMenuItemProps>;
-        DropdownMenuLabel: ComponentType<{ children: ReactNode; className?: string }>;
-        DropdownMenuSeparator: ComponentType<{}>;
-        DropdownMenuGroup: ComponentType<{ children: ReactNode }>;
-        DropdownMenuSub: ComponentType<{ children: ReactNode }>;
-        DropdownMenuSubTrigger: ComponentType<{ children: ReactNode }>;
-        DropdownMenuSubContent: ComponentType<{ children: ReactNode }>;
+        FloatingBar: ComponentType<FloatingBarProps>;
+        StatusDot: ComponentType<StatusDotProps>;
+        ContextMenu: ComponentType<ContextMenuProps>;
+        ContextMenuZone: ComponentType<ContextMenuZoneProps>;
         Icons: Record<string, ComponentType<{ className?: string }>>;
         [key: string]: any;
       };
@@ -369,21 +364,16 @@ declare global {
       StatCard: ComponentType<StatCardProps>;
       Input: ComponentType<InputProps>;
       Modal: ComponentType<ModalProps>;
+      SlidePanel: ComponentType<SlidePanelProps>;
       Table: ComponentType<TableProps<any>>;
       Checkbox: ComponentType<CheckboxProps>;
       DatePicker: ComponentType<DatePickerProps>;
       Pagination: ComponentType<PaginationProps>;
       BulkActionBar: ComponentType<BulkActionBarProps>;
-      DropdownMenu: ComponentType<DropdownMenuProps>;
-      DropdownMenuTrigger: ComponentType<DropdownMenuTriggerProps>;
-      DropdownMenuContent: ComponentType<DropdownMenuContentProps>;
-      DropdownMenuItem: ComponentType<DropdownMenuItemProps>;
-      DropdownMenuLabel: ComponentType<{ children: ReactNode; className?: string }>;
-      DropdownMenuSeparator: ComponentType<{}>;
-      DropdownMenuGroup: ComponentType<{ children: ReactNode }>;
-      DropdownMenuSub: ComponentType<{ children: ReactNode }>;
-      DropdownMenuSubTrigger: ComponentType<{ children: ReactNode }>;
-      DropdownMenuSubContent: ComponentType<{ children: ReactNode }>;
+      FloatingBar: ComponentType<FloatingBarProps>;
+      StatusDot: ComponentType<StatusDotProps>;
+      ContextMenu: ComponentType<ContextMenuProps>;
+      ContextMenuZone: ComponentType<ContextMenuZoneProps>;
       Icons: Record<string, ComponentType<{ className?: string }>>;
     };
   }
