@@ -1,6 +1,6 @@
 {
   "name": "@birdactyl/plugin-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SDK for building Birdactyl plugin UIs",
   "type": "module",
   "main": "dist/index.js",
@@ -41,7 +41,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Birdactyl/Birdactyl-UI-SDK"
+    "url": "git+https://github.com/Birdactyl/Birdactyl-UI-SDK.git"
   },
   "author": "Birdactyl",
   "homepage": "https://github.com/Birdactyl/Birdactyl-UI-SDK",
